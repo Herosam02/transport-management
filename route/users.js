@@ -1,13 +1,27 @@
-import express from 'express';
-import { registerUser, loginUser, getAllUsers, getUserById, updateUser, deleteUser } from '../controllers/user.js';
+import express from "express";
+import {
+  registerUser,
+  loginUser,
+  getAllUsers,
+  getUserById,
+  updateUser,
+  deleteUser
+} from "../controllers/user.js";
+import { verifyUser } from "../middleware/auth.js";
+import { admin } from "../middleware/admin.js";
 
 const router = express.Router();
 
-router.post('/register', registerUser);
-router.post('/login', loginUser);
-router.get('/', getAllUsers);         // 👈 GET /api/users
-router.get('/:id', getUserById);      // 👈 GET /api/users/:id
-router.put('/:id', updateUser);       // 👈 PUT /api/users/:id
-router.delete('/:id', deleteUser);    // 👈 DELETE /api/users/:id
+// Public routes
+router.post("/register", registerUser);
+router.post("/login", loginUser);
+
+// Protected routes
+router.get("/", verifyUser, getAllUsers);
+router.get("/:id", verifyUser, getUserById);
+router.put("/:id", verifyUser, updateUser);
+
+// Admin-only route
+router.delete("/:id", verifyUser, admin, deleteUser);
 
 export default router;
