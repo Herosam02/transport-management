@@ -1,8 +1,8 @@
 // middleware/auth.js
 import jwt from "jsonwebtoken";
-import User from "../models/Users.js";
+import Products from "../models/Product.js";
 
-const verifyUser = async (req, res, next) => {
+const verifyProduct = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -13,18 +13,18 @@ const verifyUser = async (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     // Load full user from DB to ensure latest role, etc.
-    const user = await User.findByPk(decoded.id);
-    if (!user) {
+    const Product = await Products.findByPk(decoded.id);
+    if (!Product) {
       return res.status(401).json({ error: "User not found (from token)" });
     }
 
     // attach plain object (not Sequelize instance) for easier checks / logging
-    req.user = user.get ? user.get({ plain: true }) : user;
+    req.Product = Product.get ? Product.get({ plain: true }) : Product;
     next();
   } catch (err) {
-    console.error("auth.verifyUser error:", err);
+    console.error("auth.verifyProduct error:", err);
     return res.status(401).json({ error: "Invalid or expired token" });
   }
 };
 
-export { verifyUser };
+export { verifyProduct };

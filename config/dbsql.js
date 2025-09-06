@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const sequelize = new Sequelize(
-  process.env.DB_NAME || "transport_management",
+  process.env.DB_NAME || "EcommerceProductCatalogAPI",
   process.env.DB_USER || "root",
   process.env.DB_PASS || "",
   {
